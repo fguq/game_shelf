@@ -79,6 +79,13 @@ class GameInfo
     back_menu
   end
 
+  # プログラムの終了
+  def game_shelf_end
+    puts "プログラムを終了します。"
+    puts "（データは保存されません。データの保存機能は近日実装予定です。）"
+    gets.chomp
+  end
+
   # メインメニュー
   def run
     puts "\n#{@separator}"
@@ -87,13 +94,14 @@ class GameInfo
     puts "1.ゲームの登録"
     puts "2.登録したゲームの一覧"
     puts "3.登録したゲームの削除"
+    puts "4.プログラムを終了する"
     puts "(使いたい機能の番号を入力してください)"
     print ">"
     function = gets.chomp.to_i
 
     # 不正な数字が入力された場合の処理
-    until function == 1 || function == 2 || function == 3
-      puts "(1～3の数字を入力してください。)"
+    until function == 1 || function == 2 || function == 3 || function == 4
+      puts "(1～4の数字を入力してください。)"
       print ">"
       function = gets.chomp.to_i
     end
@@ -106,6 +114,8 @@ class GameInfo
       display
     when 3
       game_delete
+    when 4
+      game_shelf_end
     end
   end
 
