@@ -1,3 +1,5 @@
+require "date"
+
 class GameInfo
 
   def initialize
@@ -15,17 +17,34 @@ class GameInfo
     hardware = gets.chomp
     print "メーカー："
     maker = gets.chomp
+
+    begin
+      print "購入日："
+      purchase_date = Date.parse(gets.chomp)
+    rescue
+      puts "正しい日付を入力してください。"
+      retry
+    end
+
     begin
       print "評価：(0～5の半角整数で入力してください。) >"
       star = gets.chomp
       until Integer(star).between?(0, 5)
         print "評価：(0～5の半角整数で入力してください。) >"
-       star = gets.chomp
+        star = gets.chomp
       end
     rescue
       retry
     end
-    @game_info = [title, hardware, maker, star]
+
+    puts "備考（20字まで）："
+    note = gets.chomp
+    while note.length > 20
+      puts "現在#{note.length}字です。もう一度入力してください。"
+      note = gets.chomp
+    end
+
+    @game_info = [title, hardware, maker, purchase_date, star, note]
     @game_list << @game_info
     puts "登録しました。"
     back_menu
@@ -39,8 +58,10 @@ class GameInfo
       puts "タイトル：#{game[0]}"
       puts "ハード：#{game[1]}"
       puts "メーカー：#{game[2]}"
+      puts "購入日：#{game[3]}"
       print "評価："
-      puts sprintf( "%-*s", 5,  "★" * game[3].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
+      puts sprintf( "%-*s", 5,  "★" * game[4].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
+      puts "備考：#{game[5]}"
       puts @separator
     end
     back_menu
@@ -126,7 +147,3 @@ class GameInfo
     run
   end
 end
-
-
-game_shelf = GameInfo.new
-game_shelf.run
