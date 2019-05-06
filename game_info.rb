@@ -69,35 +69,40 @@ class GameInfo
 
   # 削除機能
   def game_delete
-    puts "\n登録されたゲームを削除します。削除したいゲームの番号を選んでください。"
-    puts @separator
-    n = 0
-    @game_list.each do |game|
-      n += 1
-      puts "#{n} : #{game[0]}"
-    end
-    puts @separator
-    begin
-      print "番号を入力してください。"
-      delete_num = gets.chomp
-      until Integer(delete_num).between?(1, n)
-        print "正しい番号を入力してください。"
-       delete_num = gets.chomp
-      end
-    rescue
-      retry
-    end
-
-    print "本当に#{@game_list[delete_num.to_i - 1][0]}を削除しますか？削除する場合は y キーを押してください。> "
-    key = gets.chomp
-    if key == "y"
-      puts "#{@game_list[delete_num.to_i - 1][0]}を削除しました。"
-      @game_list.delete_at(delete_num.to_i - 1)
-      puts "メニューに戻ります。"
+    if @game_list[0] == nil
+      puts "登録されているゲームがありません。"
+      back_menu
     else
-      puts "メニューに戻ります。"
+      puts "\n登録されたゲームを削除します。削除したいゲームの番号を選んでください。"
+      puts @separator
+      n = 0
+      @game_list.each do |game|
+        n += 1
+        puts "#{n} : #{game[0]}"
+      end
+      puts @separator
+      begin
+        print "番号を入力してください。"
+        delete_num = gets.chomp
+        until Integer(delete_num).between?(1, n)
+          print "正しい番号を入力してください。"
+          delete_num = gets.chomp
+        end
+      rescue
+        retry
+      end
+
+      print "本当に#{@game_list[delete_num.to_i - 1][0]}を削除しますか？削除する場合は y キーを押してください。> "
+      key = gets.chomp
+      if key == "y"
+        puts "#{@game_list[delete_num.to_i - 1][0]}を削除しました。"
+        @game_list.delete_at(delete_num.to_i - 1)
+        puts "メニューに戻ります。"
+      else
+        puts "メニューに戻ります。"
+      end
+      back_menu
     end
-    back_menu
   end
 
   # プログラムの終了
