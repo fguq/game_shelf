@@ -1,4 +1,5 @@
 require "date"
+require "csv"
 
 class GameInfo
 
@@ -44,8 +45,10 @@ class GameInfo
       note = gets.chomp
     end
 
-    @game_info = [title, hardware, maker, purchase_date, star, note]
-    @game_list << @game_info
+    CSV.open("./game_list.csv", "a") do |item|
+      item << [title, hardware, maker, purchase_date, star, note]
+    end
+
     puts "登録しました。"
     back_menu
   end
@@ -54,14 +57,16 @@ class GameInfo
   def display
     puts "\n登録されたゲーム一覧"
     puts @separator
-    @game_list.each do |game|
-      puts "タイトル：#{game[0]}"
-      puts "ハード：#{game[1]}"
-      puts "メーカー：#{game[2]}"
-      puts "購入日：#{game[3]}"
+
+    # あとでtableでの処理に直す
+    CSV.foreach("./game_list.csv", headers: true) do |game|
+      puts "タイトル：#{game["title"]}"
+      puts "ハード：#{game["hardware"]}"
+      puts "メーカー：#{game["maker"]}"
+      puts "購入日：#{game["purchase_date"]}"
       print "評価："
-      puts sprintf( "%-*s", 5,  "★" * game[4].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
-      puts "備考：#{game[5]}"
+      puts sprintf( "%-*s", 5,  "★" * game["star"].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
+      puts "備考：#{game["note"]}"
       puts @separator
     end
     back_menu
@@ -69,16 +74,18 @@ class GameInfo
 
   # 削除機能
   def game_delete
-    if @game_list[0] == nil
+    game_table = CSV.table("./game_list.csv")
+
+    if game_table[0] == nil
       puts "登録されているゲームがありません。"
       back_menu
     else
       puts "\n登録されたゲームを削除します。削除したいゲームの番号を選んでください。"
       puts @separator
       n = 0
-      @game_list.each do |game|
+      game_table.each do |game|
         n += 1
-        puts "#{n} : #{game[0]}"
+        puts "#{n} : #{game[:title]}"
       end
       puts @separator
       begin
@@ -92,11 +99,17 @@ class GameInfo
         retry
       end
 
-      print "本当に#{@game_list[delete_num.to_i - 1][0]}を削除しますか？削除する場合は y キーを押してください。> "
+      print "本当に「#{game_table[delete_num.to_i - 1][:title]}」を削除しますか？削除する場合は y キーを押してください。> "
       key = gets.chomp
       if key == "y"
-        puts "#{@game_list[delete_num.to_i - 1][0]}を削除しました。"
-        @game_list.delete_at(delete_num.to_i - 1)
+        puts "#{game_table[delete_num.to_i - 1][:title]}を削除しました。"
+
+        game_table.delete(delete_num.to_i - 1)
+
+        File.open("./game_list.csv", "w") do |file|
+          file.write(game_table.to_csv)
+        end
+        
         puts "メニューに戻ります。"
       else
         puts "メニューに戻ります。"
