@@ -121,14 +121,13 @@ class GameInfo
   # プログラムの終了
   def game_shelf_end
     puts "プログラムを終了します。"
-    puts "（データは保存されません。データの保存機能は近日実装予定です。）"
     gets.chomp
   end
 
   # メインメニュー
   def run
     puts "\n#{@separator}"
-    puts "所持ゲーム管理ツール"
+    puts "所持ゲーム管理ツール(Ver 1.2.0)"
     puts @separator
     puts "1.ゲームの登録"
     puts "2.登録したゲームの一覧"
