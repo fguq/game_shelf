@@ -4,7 +4,6 @@ require "csv"
 class GameInfo
 
   def initialize
-    @game_list = []
     @separator = "---------------------------------------------------"
   end
   
@@ -58,15 +57,15 @@ class GameInfo
     puts "\n登録されたゲーム一覧"
     puts @separator
 
-    # あとでtableでの処理に直す
-    CSV.foreach("./game_list.csv", headers: true) do |game|
-      puts "タイトル：#{game["title"]}"
-      puts "ハード：#{game["hardware"]}"
-      puts "メーカー：#{game["maker"]}"
-      puts "購入日：#{game["purchase_date"]}"
+    game_table = CSV.table("./game_list.csv")
+    game_table.each do |game|
+      puts "タイトル：#{game[:title]}"
+      puts "ハード：#{game[:hardware]}"
+      puts "メーカー：#{game[:maker]}"
+      puts "購入日：#{game[:purchase_date]}"
       print "評価："
-      puts sprintf( "%-*s", 5,  "★" * game["star"].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
-      puts "備考：#{game["note"]}"
+      puts sprintf( "%-*s", 5,  "★" * game[:star].to_i).gsub(" ", "☆").gsub("★", "★ ").gsub("☆", "☆ ")
+      puts "備考：#{game[:note]}"
       puts @separator
     end
     back_menu
